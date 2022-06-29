@@ -2,7 +2,7 @@ from threading import Thread
 from telegram import InlineKeyboardMarkup
 from telegram.ext import CommandHandler, CallbackQueryHandler
 
-from bot import LOGGER, dispatcher
+from bot import LOGGER, dispatcher, SUDO_USERS
 from bot.helper.mirror.upload.gdrive_helper import GoogleDriveHelper
 from bot.helper.tg_helper.msg_utils import sendMessage, editMessage, sendMarkup
 from bot.helper.tg_helper.filters import CustomFilters
@@ -28,7 +28,7 @@ def select_type(update, context):
     key = msg.reply_to_message.text.split(" ", maxsplit=1)[1]
     data = query.data
     data = data.split(" ")
-    if user_id != int(data[1]):
+    if user_id != int(data[1]) or user_id not in SUDO_USERS:
         return query.answer(text="Not Yours!", show_alert=True)
     elif data[2] == 'cancel':
         query.answer()
